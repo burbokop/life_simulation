@@ -1,0 +1,10 @@
+[package]
+name = "life_simulation"
+version = "0.0.1"
+edition = "2021"
+
+
+[dependencies]
+chromosome = "0.0.7"
+sdl2 = "0.35.2"
+rand = "0.8.5"
