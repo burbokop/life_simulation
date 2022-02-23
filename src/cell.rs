@@ -2,12 +2,34 @@
 
 use std::slice::SliceIndex;
 
+use al_jabr::{Vector2, vector, Matrix};
 use chromosome::Chromosome;
 use rand::{RngCore, distributions::uniform::SampleRange, Rng};
+
+enum Direction {
+    Left,
+    Right,
+    Up,
+    Down
+}
+
+
+impl<T: From<i8>> From<Direction> for Vector2<T> {
+    fn from(val: Direction) -> Self {
+        match val {
+            Direction::Left => vector![T::from(-1_i8), T::from(0_i8)],
+            Direction::Right => vector![T::from(1_i8), T::from(0_i8)],
+            Direction::Up => vector![T::from(0_i8), T::from(-1_i8)],
+            Direction::Down => vector![T::from(0_i8), T::from(1_i8)],
+        }
+    }
+}
 
 
 pub trait CellBrain {
     fn proceed(self: &Self, chromosome: &Chromosome<u8>, current_cmd_index: &mut usize) -> bool;
+
+    fn move_cell() -> 
 }
 
 
