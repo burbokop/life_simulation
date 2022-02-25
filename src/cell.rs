@@ -3,7 +3,7 @@
 
 use matmath::game::vec2::Vector2;
 use chromosome::Chromosome;
-use rand::{RngCore, distributions::uniform::SampleRange, Rng};
+use rand::{RngCore, distributions::uniform::SampleRange};
 
 pub enum Direction {
     Left,

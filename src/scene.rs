@@ -1,6 +1,8 @@
+use core::num::dec2flt::number::Number;
 use std::ops::Add;
 
 use matmath::game::vec2::Vector2;
+use num_traits::Signed;
 
 use crate::cell::{Cell, CellBrain};
 
@@ -22,6 +24,7 @@ enum Neighborhood {
     VonNeumann,
 }
 
+
 impl Neighborhood {
     pub fn max_count(self: Neighborhood) -> usize {
         match self {
@@ -29,18 +32,29 @@ impl Neighborhood {
             Neighborhood::VonNeumann => 4,
         }
     }
-
-    //iter: impl Iterator<Item = PositionalCell>
-    pub fn filter_fn(self: Neighborhood) -> fn(&PositionalCell, &PositionalCell) -> bool {
+ 
+    pub fn into_predicate<T: Signed + PartialOrd<i32>>(self: Neighborhood) -> fn(Vector2<T>) -> bool {
         match self {
-            Neighborhood::Moore => {
-                |center: &PositionalCell, c: &PositionalCell| -> bool {(c.position.x - center.position.x).abs() <= 1 && (c.position.y - center.position.y).abs() <= 1}
-            },
-            Neighborhood::VonNeumann => {
-                |center: &PositionalCell, c: &PositionalCell| -> bool {(c.position.x - center.position.x).abs() <= 1 || (c.position.y - center.position.y).abs() <= 1}
-            },
+            Neighborhood::Moore => |v: Vector2<T>| v.x.abs() <= 1 && v.y.abs() <= 1,
+            Neighborhood::VonNeumann => |v: Vector2<T>| (v.x.abs() <= 1 && v.y == 0) || (v.y.abs() <= 1 && v.x == 0)            
         }
     }
+
+    pub fn predicate<T: Signed + PartialOrd<i32>>(self: &Neighborhood) -> fn(&Vector2<T>) -> bool {
+        match self {
+            Neighborhood::Moore => |v| v.x.abs() <= 1 && v.y.abs() <= 1,
+            Neighborhood::VonNeumann => |v| (v.x.abs() <= 1 && v.y == 0) || (v.y.abs() <= 1 && v.x == 0)            
+        }
+    }
+
+    //iter: impl Iterator<Item = PositionalCell>
+    pub fn into_filter_fn(self: Neighborhood, c0: PositionalCell) -> impl FnOnce(PositionalCell) -> bool {
+        |c1| self.into_predicate()(c0.position - c1.position)
+    }
+    //pub fn filter_fn(self: &Neighborhood, c0: &PositionalCell) -> impl Fn(&PositionalCell) -> bool {
+    //    |c1| self.predicate()(&(c0.position.clone() - c1.position.clone()))
+    //}
+
 }
 
 impl Scene {
@@ -59,7 +73,12 @@ impl Scene {
                     self.cells[i].position = new_position;
                 }
 
-                if result.ready_mate &&  {
+                if result.ready_mate {
+                    self
+                        .cells
+                        .iter()
+                        .filter(|c| Neighborhood::Moore.into_predicate()(self.cells[i].position - c.position))
+                        .filter(|c| c.)
 
                 }
             }
