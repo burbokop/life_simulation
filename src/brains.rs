@@ -1,4 +1,4 @@
-use crate::cell::CellBrain;
+use crate::cell::{CellBrain, Cell, ProceedResult};
 
 
 
@@ -10,7 +10,7 @@ pub struct DefaultBrain {
 }
 
 impl CellBrain for DefaultBrain {
-    fn proceed(self: &Self, chromosome: &chromosome::Chromosome<u8>, current_cmd_index: &mut usize) -> bool {
+    fn proceed(self: &Self, cell: &mut Cell) -> ProceedResult {
         todo!()
     }
 }
