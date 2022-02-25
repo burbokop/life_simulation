@@ -14,6 +14,15 @@ enum Direction {
 }
 
 
+fn aaa<T: From<i8>>() -> Vector2<T> {
+    vector![T::from(-1_i8), T::from(0_i8)]
+}
+
+fn bbb() -> impl Iterator<Item=i32> {
+    aaa().into_iter()
+}
+
+
 impl<T: From<i8>> From<Direction> for Vector2<T> {
     fn from(val: Direction) -> Self {
         match val {
