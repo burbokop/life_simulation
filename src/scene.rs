@@ -4,7 +4,7 @@ use std::ops::Add;
 use matmath::game::vec2::Vector2;
 use num_traits::Signed;
 
-use crate::cell::{Cell, CellBrain};
+use crate::cell::{Cell, CellBrain, ProceedResult};
 
 
 
@@ -61,31 +61,40 @@ impl Scene {
 
 
     pub fn proceed<B: CellBrain>(self: &mut Self, brain: &B) -> () {
+        let mut proc_results: Vec<ProceedResult> = Vec::with_capacity(self.cells.len());
         let mut dead_indices: Vec<usize> = Vec::with_capacity(self.cells.len());
         for i in 0..self.cells.len() {
             let result = self.cells[i].cell.proceed(brain);
             if result.is_dead {
                 dead_indices.push(i)
             } else {
-                let direction: Vector2<i32> = result.move_direction.into();            
-                let new_position=  self.cells[i].position.clone() + direction;
-                if self.cells.iter().find(|c| new_position == c.position).is_none() {
-                    self.cells[i].position = new_position;
-                }
-
-                if result.ready_mate {
-                    self
-                        .cells
-                        .iter()
-                        .filter(|c| Neighborhood::Moore.into_predicate()(self.cells[i].position - c.position))
-                        .filter(|c| c.)
-
-                }
+                proc_results.push(result);
             }
         }
 
         for i in dead_indices.into_iter() {
             self.cells.remove(i);
         }
+
+        for i in 0..proc_results.len() {
+            let result = proc_results[i];
+
+            let direction: Vector2<i32> = result.move_direction.into();            
+            let new_position=  self.cells[i].position.clone() + direction;
+            if self.cells.iter().find(|c| new_position == c.position).is_none() {
+                self.cells[i].position = new_position;
+            }
+
+            if result.ready_mate {
+                self
+                    .cells
+                    .iter()
+                    .filter(|c| Neighborhood::Moore.into_predicate()(self.cells[i].position - c.position))
+                    .filter(|c| c.)
+
+            }
+
+        }
+
     }
 }
