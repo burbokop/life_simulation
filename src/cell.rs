@@ -25,7 +25,8 @@ impl<T: From<i8>> From<Direction> for Vector2<T> {
 
 pub struct ProceedResult {
     pub move_direction: Direction,
-    pub is_dead: bool
+    pub is_dead: bool,
+    pub ready_mate: bool
 }
 
 pub trait CellBrain {
@@ -39,8 +40,8 @@ pub struct Cell {
 }
 
 impl Cell {
-    pub fn new_random<R : RngCore, Range: SampleRange<u8> + Clone>(size: usize, range: Range, rng: &mut R, x: i32, y: i32) -> Self {
-        Cell { chromosome: Chromosome::new_random(size, range, rng), current_cmd_index: 0, x: x, y: y }
+    pub fn new_random<R : RngCore, Range: SampleRange<u8> + Clone>(size: usize, range: Range, rng: &mut R) -> Self {
+        Cell { chromosome: Chromosome::new_random(size, range, rng), current_cmd_index: 0 }
     }
 
     pub fn proceed<T: CellBrain>(self: &mut Self, brain: &T) -> ProceedResult {

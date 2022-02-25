@@ -1,5 +1,6 @@
 use std::time::Duration;
 
+use matmath::game::vec2::Vector2;
 use sdl2::{pixels::Color, event::Event, keyboard::Keycode, rect::Rect};
 
 mod cell;
@@ -18,10 +19,10 @@ fn main() {
     let mut rng = rand::rngs::OsRng::default();
 
 
-    scene.cells.push(Cell::new_random(8, 0..20, &mut rng, 1, 1));
-    scene.cells.push(Cell::new_random(8, 0..20, &mut rng, 2, 2));
-    scene.cells.push(Cell::new_random(8, 0..20, &mut rng, 1, 2));
-    scene.cells.push(Cell::new_random(8, 0..20, &mut rng, 3, 2));
+    scene.cells.push(scene::PositionalCell { cell: Cell::new_random(8, 0..20, &mut rng), position: Vector2::new(1, 1) });
+    scene.cells.push(scene::PositionalCell { cell: Cell::new_random(8, 0..20, &mut rng), position: Vector2::new(2, 2) });
+    scene.cells.push(scene::PositionalCell { cell: Cell::new_random(8, 0..20, &mut rng), position: Vector2::new(1, 2) });
+    scene.cells.push(scene::PositionalCell { cell: Cell::new_random(8, 0..20, &mut rng), position: Vector2::new(3, 2) });
 
 
     let sdl_context = sdl2::init().unwrap();
@@ -55,7 +56,7 @@ fn main() {
         scene.proceed(&brain);
 
         scene.cells.iter().for_each(|cell|{
-            let rect = Rect::new(cell.x * CELL_W as i32, cell.y * CELL_H as i32, CELL_W, CELL_H);
+            let rect = Rect::new(cell.position.x * CELL_W as i32, cell.position.y * CELL_H as i32, CELL_W, CELL_H);
             canvas.set_draw_color(Color::RGB(255 - color_factor, 64, color_factor));
             canvas.fill_rect(rect).unwrap();
             canvas.set_draw_color(Color::RGB(255 - color_factor, color_factor, 64));
