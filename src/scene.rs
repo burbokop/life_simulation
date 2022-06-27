@@ -61,6 +61,8 @@ impl Scene {
 
 
     pub fn proceed<B: CellBrain>(self: &mut Self, brain: &B) -> () {
+        struct 
+
         let mut proc_results: Vec<ProceedResult> = Vec::with_capacity(self.cells.len());
         let mut dead_indices: Vec<usize> = Vec::with_capacity(self.cells.len());
         for i in 0..self.cells.len() {
@@ -90,7 +92,7 @@ impl Scene {
                     .cells
                     .iter()
                     .filter(|c| Neighborhood::Moore.into_predicate()(self.cells[i].position - c.position))
-                    .filter(|c| c.)
+                    .filter(|c| c)
 
             }
 
